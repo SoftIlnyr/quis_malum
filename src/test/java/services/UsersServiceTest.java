@@ -1,20 +1,13 @@
 package services;
 
 import org.junit.*;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import ru.kpfu.itis.SoftIlnyr.mvc.entities.User;
-import ru.kpfu.itis.SoftIlnyr.mvc.repositories.UsersRepository;
-import ru.kpfu.itis.SoftIlnyr.mvc.services.IMPL.UsersServiceIMPL;
-import ru.kpfu.itis.SoftIlnyr.mvc.services.INTERFACES.UsersService;
+import ru.kpfu.itis.Timofeeva.mvc.entities.User;
+import ru.kpfu.itis.Timofeeva.mvc.repositories.UsersRepository;
+import ru.kpfu.itis.Timofeeva.mvc.services.IMPL.UsersServiceIMPL;
 
 import java.util.ArrayList;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

@@ -19,7 +19,7 @@
                 </ul>
             </li>
             <li><a href="#"><i class="fa fa-hospital-o"></i> <span>Клиники</span></a></li>
-            <li><a href="#"><i class="fa fa-table"></i> <span>Таблица хлебных единиц</span></a></li>
+            <li><a href="/table"><i class="fa fa-table"></i> <span>Таблица хлебных единиц</span></a></li>
 
 
         <#--<@security.authorize access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')">-->

@@ -18,6 +18,8 @@
                              authentication-success-handler-ref="authSuccess"
         />
         <security:logout logout-url="/logout" logout-success-url="/test" delete-cookies="JSESSIONID"/>
+        <security:intercept-url pattern="/tables/users/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_SIMPLE')"/>
+        <security:intercept-url pattern="/tables/blood/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_SIMPLE')"/>
         <security:intercept-url pattern="/tables/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')"/>
         <security:intercept-url pattern="/authors/**" method="POST" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')"/>
         <security:intercept-url pattern="/books/**" method="POST" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')"/>
@@ -41,6 +43,6 @@
         </security:authentication-provider>
     </security:authentication-manager>
 
-    <bean id="authProvider" class="ru.kpfu.itis.SoftIlnyr.mvc.security.AuthProviderIMPL"/>
-    <bean id="authSuccess" class="ru.kpfu.itis.SoftIlnyr.mvc.security.MyAuthSuccess"/>
+    <bean id="authProvider" class="ru.kpfu.itis.Timofeeva.mvc.security.AuthProviderIMPL"/>
+    <bean id="authSuccess" class="ru.kpfu.itis.Timofeeva.mvc.security.MyAuthSuccess"/>
 </beans>

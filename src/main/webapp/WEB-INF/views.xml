@@ -3,13 +3,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-    <bean id="talonsView"
-          class="ru.kpfu.itis.SoftIlnyr.mvc.excel.TalonExcelView">
-    </bean>
-
-    <bean id="booksView" class="ru.kpfu.itis.SoftIlnyr.mvc.excel.BookExcelView"/>
-
-    <bean id="usersView" class="ru.kpfu.itis.SoftIlnyr.mvc.excel.UsersExcelView"/>
-    <bean id="presencesView" class="ru.kpfu.itis.SoftIlnyr.mvc.excel.PresencesExcelView"/>
+    <bean id="usersView" class="ru.kpfu.itis.Timofeeva.mvc.excel.UsersExcelView"/>
 
 </beans>

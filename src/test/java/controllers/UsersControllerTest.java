@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.ui.ModelMap;
-import ru.kpfu.itis.SoftIlnyr.mvc.controllers.UsersController;
+import ru.kpfu.itis.Timofeeva.mvc.controllers.UsersController;
 
 import java.security.Principal;
 

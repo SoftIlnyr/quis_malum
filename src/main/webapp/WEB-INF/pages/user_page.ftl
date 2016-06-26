@@ -66,12 +66,12 @@
                                         </div><!-- /.col -->
                                         <div class="col-sm-8">
                                             <h1>${userinfo.firstName} ${userinfo.surname}</h1>
-                                            <form class="form-horizontal">
+                                            <form class="form-horizontal" action="/tables/blood/${userinfo.id}" method="post">
 
                                                 <div class="form-group">
                                                     <label class="col-sm-4 control-label">Уровень сахара:</label>
                                                     <div class="col-sm-8">
-                                                    <input path="firstName" type="text" class="form-control" name="first_name"
+                                                    <input type="text" class="form-control" name="sugar_level"
                                                     placeholder="Введите ваш уровень сахара"/>
                                                     </div>
                                                 </div>
@@ -79,7 +79,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-4 control-label">Общее самочувствие:</label>
                                                     <div class="col-sm-8">
-                                                    <input path="surname" type="text" class="form-control" name="surname"
+                                                    <input type="text" class="form-control" name="description"
                                                     placeholder="Как ваше самочувствие?"/>
                                                     </div>
                                                 </div>
@@ -130,14 +130,14 @@
                                                        placeholder="Введите свое имя" value="${userinfo.firstName}">
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label">Второе имя:</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" name="last_name"
-                                                       placeholder="Введите свое второе имя (необязательно)"
-                                                       value="${userinfo.lastName}">
-                                            </div>
-                                        </div>
+                                        <#--<div class="form-group">-->
+                                            <#--<label class="col-sm-2 control-label">Второе имя:</label>-->
+                                            <#--<div class="col-sm-10">-->
+                                                <#--<input type="text" class="form-control" name="last_name"-->
+                                                       <#--placeholder="Введите свое второе имя (необязательно)"-->
+                                                       <#--value="${userinfo.lastName}">-->
+                                            <#--</div>-->
+                                        <#--</div>-->
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label">Фамилия:</label>
                                             <div class="col-sm-10">
@@ -165,21 +165,21 @@
                                                 <input type="file" name="avatar">
                                             </div>
                                         </div>
-                                        <@security.authorize access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')">
+                                        <#--<@security.authorize access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')">-->
 
-                                            <div class="form-group">
-                                                <label class="col-sm-2 control-label">Роль:</label>
-                                                <div class="col-sm-10">
-                                                    <select class="form-control select2" style="width: 100%;"
-                                                            name="role">
-                                                        <option selected="selected">${userinfo.role}</option>
-                                                        <option>ROLE_ADMIN</option>
-                                                        <option>ROLE_MANAGER</option>
-                                                        <option>ROLE_SIMPLE</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </@security.authorize>
+                                            <#--<div class="form-group">-->
+                                                <#--<label class="col-sm-2 control-label">Роль:</label>-->
+                                                <#--<div class="col-sm-10">-->
+                                                    <#--<select class="form-control select2" style="width: 100%;"-->
+                                                            <#--name="role">-->
+                                                        <#--<option selected="selected">${userinfo.role}</option>-->
+                                                        <#--<option>ROLE_ADMIN</option>-->
+                                                        <#--<option>ROLE_MANAGER</option>-->
+                                                        <#--<option>ROLE_SIMPLE</option>-->
+                                                    <#--</select>-->
+                                                <#--</div>-->
+                                            <#--</div>-->
+                                        <#--</@security.authorize>-->
                                     </div><!-- /.box-body -->
                                     <div class="box-footer">
                                         <button class="btn btn-default">Отмена</button>
@@ -210,26 +210,20 @@
                                     <th>Уровень Крови (ммоль/л)</th>
                                     <th>Общее самочувствие</th>
                                 </tr>
+                                <#list bloodinfo as b>
                                 <tr>
-                                    <td>13.05.16</td>
-                                    <td><span class="label label-success">4.8</span></td>
-                                    <td>Норма</td>
+                                    <td>${b.date}</td>
+                                    <#if b.sugar_level < 5>
+                                        <td><span class="label label-success">${b.sugar_level}</span></td>
+                                    <#elseif b.sugar_level < 6>
+                                        <td><span class="label label-warning">${b.sugar_level}</span></td>
+                                    <#else>
+                                        <td><span class="label label-danger">${b.sugar_level}</span></td>
+
+                                    </#if>
+                                    <td>${b.description}</td>
                                 </tr>
-                                <tr>
-                                    <td>12.05.16</td>
-                                    <td><span class="label label-success">4.5</span></td>
-                                    <td>Хорошее</td>
-                                </tr>
-                                <tr>
-                                    <td>11.05.16</td>
-                                    <td><span class="label label-warning">5.8</span></td>
-                                    <td>Норма</td>
-                                </tr>
-                                <tr>
-                                    <td>10.05.16</td>
-                                    <td><span class="label label-warning">6.1</span></td>
-                                    <td>Общая усталость</td>
-                                </tr>
+                                </#list>
                             </table>
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->
