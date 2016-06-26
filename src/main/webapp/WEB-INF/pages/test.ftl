@@ -226,6 +226,9 @@
 <script src="/resources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
 <!-- Bootstrap 3.3.5 -->
 <script src="/resources/bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="/resources/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/resources/plugins/datatables/dataTables.bootstrap.min.js"></script>
 <!-- SlimScroll -->
 <script src="/resources/plugins/slimScroll/jquery.slimscroll.min.js"></script>
 <!-- FastClick -->
@@ -234,5 +237,19 @@
 <script src="/resources/dist/js/app.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="/resources/dist/js/demo.js"></script>
+<!-- page script -->
+<script>
+    $(function () {
+        $("#example1").DataTable();
+        $('#example2').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true
+        });
+    });
+</script>
 </body>
 </html>

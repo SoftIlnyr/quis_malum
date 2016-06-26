@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>LLIB | Авторы</title>
+    <title>QM | Пациенты</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -38,40 +38,68 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Авторы
+                Пользователи
             </h1>
+            <a href="/tables/users/excel"><small>Загрузить</small></a>
+
         </section>
 
         <!-- Main content -->
         <section class="content">
 
+            <!-- table -->
             <div class="row">
-            <#list authors as author>
-                <div class="col-md-6">
-                    <!-- About Me Box -->
-                    <div class="box box-primary">
-                        <div class="box-header with-border">
-                            <a href="/authors/${author.id}"><h3
-                                    class="text-muted text-center">${author.name} ${author.surname}</h3></a>
+                <div class="col-xs-12">
+
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">Пользователи</h3>
                         </div><!-- /.box-header -->
                         <div class="box-body">
-                            <div class='col-sm-4'>
-                                <a href="/authors/${author.id}">
-                                    <img class='img-responsive img-bordered-sm'
-                                         src='/resources/uploads/author_images/${author.photo}' alt='Photo'></a>
-                            </div>
-                            <div class="col-sm-8">
-                                <p style="white-space: pre-line">${author.info}</p>
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nickname</th>
+                                    <th>Имя</th>
+                                    <th>Фамилия</th>
+                                    <th>Email</th>
+                                    <th>Доктор</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <#list patients as patient>
+                                <tr>
+                                    <td><a href="/users/${patient.user.id}">${patient.user.id}</a></td>
+                                    <td>${patient.user.nickname}</td>
+                                    <td>${patient.user.firstName}</td>
+                                    <td>${patient.user.surname}</td>
+                                    <td>${patient.user.email}</td>
+                                    <#if patient.doctor?exists>
+                                        <td>${patient.doctor.user.firstName} ${patient.doctor.user.surname}</td>
+                                    <#else >
+                                        <td>None</td>
+                                    </#if>
 
+                                </tr>
+                                </#list>
 
-                            </div>
-
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nickname</th>
+                                    <th>Имя</th>
+                                    <th>Фамилия</th>
+                                    <th>Email</th>
+                                    <th>Доктор</th>
+                                </tr>
+                                </tfoot>
+                            </table>
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->
                 </div><!-- /.col -->
-            </#list>
             </div><!-- /.row -->
-
         </section><!-- /.content -->
     </div><!-- /.content-wrapper -->
 
@@ -89,6 +117,9 @@
 <script src="/resources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
 <!-- Bootstrap 3.3.5 -->
 <script src="/resources/bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="/resources/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/resources/plugins/datatables/dataTables.bootstrap.min.js"></script>
 <!-- SlimScroll -->
 <script src="/resources/plugins/slimScroll/jquery.slimscroll.min.js"></script>
 <!-- FastClick -->
@@ -97,5 +128,19 @@
 <script src="/resources/dist/js/app.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="/resources/dist/js/demo.js"></script>
+<!-- page script -->
+<script>
+    $(function () {
+        $("#example1").DataTable();
+        $('#example2').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true
+        });
+    });
+</script>
 </body>
 </html>

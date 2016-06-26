@@ -15,29 +15,34 @@
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="/auhors/"><i class="fa fa-circle-o"></i> Записаться на прием</a></li>
+                    <li><a href="#"><i class="fa fa-circle-o"></i> Записаться на прием</a></li>
                 </ul>
             </li>
-            <li><a href="#"><i class="fa fa-hospital-o"></i> <span>Клиники</span></a></li>
+        <#if user?exists>
+            <#if user.role == "ROLE_MANAGER">
+                <li><a href="/tables/patients"><i class="fa fa-hospital-o"></i> <span>Пациенты</span></a></li>
+            </#if>
+        </#if>
+
             <li><a href="/table"><i class="fa fa-table"></i> <span>Таблица хлебных единиц</span></a></li>
 
 
         <#--<@security.authorize access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')">-->
 
-            <#--<li class="treeview">-->
-                <#--<a href="#">-->
-                    <#--<i class="fa fa-table"></i> <span>Таблицы</span>-->
-                    <#--<i class="fa fa-angle-left pull-right"></i>-->
-                <#--</a>-->
-                <#--<ul class="treeview-menu">-->
-                    <#--<li><a href="/tables/books"><i class="fa fa-circle-o"></i> Книги</a></li>-->
-                    <#--<li><a href="/tables/authors"><i class="fa fa-circle-o"></i> Писатели</a></li>-->
-                    <#--<li><a href="/tables/libraries"><i class="fa fa-circle-o"></i> Библиотеки</a></li>-->
-                    <#--<li><a href="/tables/users"><i class="fa fa-circle-o"></i> Пользователи</a></li>-->
-                    <#--<li><a href="/tables/talons"><i class="fa fa-circle-o"></i> Записи</a></li>-->
-                    <#--<li><a href="/tables/presences"><i class="fa fa-circle-o"></i> Книги в наличии</a></li>-->
-                <#--</ul>-->
-            <#--</li>-->
+        <#--<li class="treeview">-->
+        <#--<a href="#">-->
+        <#--<i class="fa fa-table"></i> <span>Таблицы</span>-->
+        <#--<i class="fa fa-angle-left pull-right"></i>-->
+        <#--</a>-->
+        <#--<ul class="treeview-menu">-->
+        <#--<li><a href="/tables/books"><i class="fa fa-circle-o"></i> Книги</a></li>-->
+        <#--<li><a href="/tables/authors"><i class="fa fa-circle-o"></i> Писатели</a></li>-->
+        <#--<li><a href="/tables/libraries"><i class="fa fa-circle-o"></i> Библиотеки</a></li>-->
+        <#--<li><a href="/tables/users"><i class="fa fa-circle-o"></i> Пользователи</a></li>-->
+        <#--<li><a href="/tables/talons"><i class="fa fa-circle-o"></i> Записи</a></li>-->
+        <#--<li><a href="/tables/presences"><i class="fa fa-circle-o"></i> Книги в наличии</a></li>-->
+        <#--</ul>-->
+        <#--</li>-->
         <#--</@security.authorize>-->
         </ul>
     </section>

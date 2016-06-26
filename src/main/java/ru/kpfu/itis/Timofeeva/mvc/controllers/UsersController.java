@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import ru.kpfu.itis.Timofeeva.mvc.entities.Blood;
+import ru.kpfu.itis.Timofeeva.mvc.entities.Doctor;
 import ru.kpfu.itis.Timofeeva.mvc.entities.Patient;
 import ru.kpfu.itis.Timofeeva.mvc.entities.User;
 import ru.kpfu.itis.Timofeeva.mvc.forms.UserForm;
 import ru.kpfu.itis.Timofeeva.mvc.services.INTERFACES.BloodService;
+import ru.kpfu.itis.Timofeeva.mvc.services.INTERFACES.DoctorService;
 import ru.kpfu.itis.Timofeeva.mvc.services.INTERFACES.PatientService;
 import ru.kpfu.itis.Timofeeva.mvc.services.INTERFACES.UsersService;
 
@@ -40,6 +42,9 @@ public class UsersController {
 
     @Autowired
     PatientService patientService;
+
+    @Autowired
+    DoctorService doctorService;
 
     @Autowired
     private ServletContext servletContext;
@@ -89,7 +94,6 @@ public class UsersController {
         user.setRole("ROLE_SIMPLE");
 
 
-
         if (!avatar.isEmpty()) {
             String filename = saveImage(avatar);
             user.setAvatar(filename);
@@ -113,6 +117,12 @@ public class UsersController {
         }
     }
 
+    @RequestMapping(value = "/tables/patients", method = RequestMethod.GET)
+    public String patientsGet(ModelMap modelMap) {
+        modelMap.put("patients", patientService.findAll());
+        return "/patient_table";
+    }
+
     @RequestMapping(value = "/tables/users", method = RequestMethod.GET)
     public String usersGet(ModelMap modelMap) {
         modelMap.put("users", usersService.findAll());
@@ -121,7 +131,7 @@ public class UsersController {
 
     @RequestMapping(value = "/tables/users/{user_id:\\d+}", method = RequestMethod.POST)
     public String userUpdatePage(@PathVariable int user_id, @RequestParam String nickname, @RequestParam String first_name, @RequestParam String surname,
-                                 @RequestParam String password, @RequestParam String email,
+                                 @RequestParam String password, @RequestParam String email, @RequestParam String role,
                                  @RequestParam MultipartFile avatar, Principal principal) throws IOException {
         if (principal != null) {
             User principal1 = (User) ((Authentication) principal).getPrincipal();
@@ -136,12 +146,43 @@ public class UsersController {
                 }
                 user.setEmail(email);
 
+                user.setRole(role);
+
                 if (!avatar.isEmpty()) {
                     String filename = saveImage(avatar);
                     user.setAvatar(filename);
                 }
 
                 usersService.update(user);
+
+                if ("ROLE_MANAGER".equals(role)) {
+                    Patient patient = patientService.findPatient(user);
+                    if (patient != null) {
+                        patientService.remove(patient);
+                    }
+
+                    Doctor doctor = doctorService.findDoctor(user);
+                    if (doctor == null) {
+                        doctor = new Doctor();
+                        doctor.setUser(user);
+                        doctorService.addDoctor(doctor);
+                    }
+                }
+
+                if ("ROLE_SIMPLE".equals(role)) {
+                    Doctor doctor = doctorService.findDoctor(user);
+                    if (doctor != null) {
+                        doctorService.remove(doctor);
+                    }
+
+                    Patient patient = patientService.findPatient(user);
+                    if (patient == null) {
+                        patient = new Patient();
+                        patient.setUser(user);
+                        patientService.addPatient(patient);
+                    }
+                }
+
                 return "redirect:/users/" + user_id;
             }
         }
@@ -169,17 +210,43 @@ public class UsersController {
         boolean access = false;
         if (principal != null) {
             User pUser = (User) ((Authentication) principal).getPrincipal();
-            if (pUser.getId() == user_id || "ROLE_ADMIN".equals(pUser.getRole())) {
+            if (pUser.getId() == user_id || "ROLE_ADMIN".equals(pUser.getRole()) || "ROLE_MANAGER".equals(pUser.getRole())) {
                 access = true;
             }
         }
-        User user = usersService.findById(user_id);
-        modelMap.put("userinfo", user);
-        List<Blood> bloodArrayList = patientService.findPatient(user).getBloodList();
-        Collections.sort(bloodArrayList, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
-        modelMap.put("bloodinfo", bloodArrayList);
-        modelMap.put("access", access);
-        return "/user_page";
+        if (access) {
+            User user = usersService.findById(user_id);
+            modelMap.put("userinfo", user);
+            if ("ROLE_SIMPLE".equals(user.getRole())) {
+                Patient patient = patientService.findPatient(user);
+                List<Blood> bloodArrayList = patientService.findPatient(user).getBloodList();
+                Collections.sort(bloodArrayList, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
+                modelMap.put("bloodinfo", bloodArrayList);
+                modelMap.put("patient", patient);
+            } else if ("ROLE_MANAGER".equals(user.getRole())) {
+                List<Patient> patientList = doctorService.findDoctor(user).getPatients();
+                modelMap.put("patientlist", patientList);
+            }
+            modelMap.put("access", access);
+            return "/user_page";
+        } else {
+            return "redirect:/table";
+        }
+    }
+
+    @RequestMapping(value = "/users/{user_id:\\d+}/doctor", method = RequestMethod.GET)
+    public String addPatientToDoctor(ModelMap modelMap, @PathVariable int user_id, Principal principal) {
+        if (principal != null) {
+            User pUser = (User) ((Authentication) principal).getPrincipal();
+            if ("ROLE_MANAGER".equals(pUser.getRole())) {
+                Patient patient = patientService.findPatient(usersService.findById(user_id));
+                Doctor doctor = doctorService.findDoctor(pUser);
+                patient.setDoctor(doctor);
+                patientService.update(patient);
+                return "redirect:/tables/patients";
+            }
+        }
+        return "redirect:/login";
     }
 
 

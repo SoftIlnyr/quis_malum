@@ -11,7 +11,7 @@ import java.util.List;
 public class Doctor {
     private int id;
     private User user;
-    private List<User> patients;
+    private List<Patient> patients;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "doctor_id_secuence")
@@ -36,11 +36,11 @@ public class Doctor {
     }
 
     @OneToMany(targetEntity = Patient.class, mappedBy = "doctor", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    public List<User> getPatients() {
+    public List<Patient> getPatients() {
         return patients;
     }
 
-    public void setPatients(List<User> patients) {
+    public void setPatients(List<Patient> patients) {
         this.patients = patients;
     }
 }

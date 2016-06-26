@@ -51,7 +51,8 @@
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#info" data-toggle="tab">Информация</a></li>
-                            <#if access><li><a href="#settings" data-toggle="tab">Редактировать</a></li></#if>
+                        <#if user == userinfo || user.role == "ROLE_ADMIN">
+                            <li><a href="#settings" data-toggle="tab">Редактировать</a></li></#if>
                         </ul>
                         <div class="tab-content">
                             <div class="active tab-pane" id="info">
@@ -66,32 +67,40 @@
                                         </div><!-- /.col -->
                                         <div class="col-sm-8">
                                             <h1>${userinfo.firstName} ${userinfo.surname}</h1>
-                                            <form class="form-horizontal" action="/tables/blood/${userinfo.id}" method="post">
+                                        <#if user == userinfo && user.role == "ROLE_SIMPLE">
+                                            <form class="form-horizontal" action="/tables/blood/${userinfo.id}"
+                                                  method="post">
 
                                                 <div class="form-group">
                                                     <label class="col-sm-4 control-label">Уровень сахара:</label>
                                                     <div class="col-sm-8">
-                                                    <input type="text" class="form-control" name="sugar_level"
-                                                    placeholder="Введите ваш уровень сахара"/>
+                                                        <input type="text" class="form-control" name="sugar_level"
+                                                               placeholder="Введите ваш уровень сахара"/>
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label class="col-sm-4 control-label">Общее самочувствие:</label>
                                                     <div class="col-sm-8">
-                                                    <input type="text" class="form-control" name="description"
-                                                    placeholder="Как ваше самочувствие?"/>
+                                                        <input type="text" class="form-control" name="description"
+                                                               placeholder="Как ваше самочувствие?"/>
                                                     </div>
                                                 </div>
 
                                                 <div class="box-footer">
-                                                    <button type="submit" class="btn btn-primary pull-right">Добавить</button>
+                                                    <button type="submit" class="btn btn-primary pull-right">Добавить
+                                                    </button>
                                                 </div><!-- /.box-footer -->
 
 
-
                                             </form>
-
+                                        </#if>
+                                        <#if user.role == "ROLE_MANAGER" && userinfo != user && userinfo.role == "ROLE_SIMPLE">
+                                            <a href="/users/${userinfo.id}/doctor">Сделать своим пациентом</a>
+                                        </#if>
+                                        <#if userinfo.role == "ROLE_SIMPLE" && patient.doctor?exists>
+                                            <p>Лечащий врач: <a href="/users/${patient.doctor.user.id}/">${patient.doctor.user.firstName} ${patient.doctor.user.surname}</a></p>
+                                        </#if>
 
 
                                         </div>
@@ -101,7 +110,7 @@
                                 </div><!-- /.post -->
 
                             </div><!-- /.tab-pane -->
-                        <#if access>
+                        <#if userinfo == user || user.role == "ROLE_ADMIN">
                             <div class="tab-pane" id="settings">
 
                                 <form class="form-horizontal" enctype="multipart/form-data"
@@ -130,14 +139,14 @@
                                                        placeholder="Введите свое имя" value="${userinfo.firstName}">
                                             </div>
                                         </div>
-                                        <#--<div class="form-group">-->
-                                            <#--<label class="col-sm-2 control-label">Второе имя:</label>-->
-                                            <#--<div class="col-sm-10">-->
-                                                <#--<input type="text" class="form-control" name="last_name"-->
-                                                       <#--placeholder="Введите свое второе имя (необязательно)"-->
-                                                       <#--value="${userinfo.lastName}">-->
-                                            <#--</div>-->
-                                        <#--</div>-->
+                                    <#--<div class="form-group">-->
+                                    <#--<label class="col-sm-2 control-label">Второе имя:</label>-->
+                                    <#--<div class="col-sm-10">-->
+                                    <#--<input type="text" class="form-control" name="last_name"-->
+                                    <#--placeholder="Введите свое второе имя (необязательно)"-->
+                                    <#--value="${userinfo.lastName}">-->
+                                    <#--</div>-->
+                                    <#--</div>-->
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label">Фамилия:</label>
                                             <div class="col-sm-10">
@@ -165,21 +174,21 @@
                                                 <input type="file" name="avatar">
                                             </div>
                                         </div>
-                                        <#--<@security.authorize access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')">-->
+                                        <@security.authorize access="hasAnyRole('ROLE_ADMIN')">
 
-                                            <#--<div class="form-group">-->
-                                                <#--<label class="col-sm-2 control-label">Роль:</label>-->
-                                                <#--<div class="col-sm-10">-->
-                                                    <#--<select class="form-control select2" style="width: 100%;"-->
-                                                            <#--name="role">-->
-                                                        <#--<option selected="selected">${userinfo.role}</option>-->
-                                                        <#--<option>ROLE_ADMIN</option>-->
-                                                        <#--<option>ROLE_MANAGER</option>-->
-                                                        <#--<option>ROLE_SIMPLE</option>-->
-                                                    <#--</select>-->
-                                                <#--</div>-->
-                                            <#--</div>-->
-                                        <#--</@security.authorize>-->
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">Роль:</label>
+                                                <div class="col-sm-10">
+                                                    <select class="form-control select2" style="width: 100%;"
+                                                            name="role">
+                                                        <option selected="selected">${userinfo.role}</option>
+                                                        <option>ROLE_ADMIN</option>
+                                                        <option>ROLE_MANAGER</option>
+                                                        <option>ROLE_SIMPLE</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </@security.authorize>
                                     </div><!-- /.box-body -->
                                     <div class="box-footer">
                                         <button class="btn btn-default">Отмена</button>
@@ -193,6 +202,8 @@
                     </div><!-- /.nav-tabs-custom -->
                 </div><!-- /.col -->
             </div><!-- /.row -->
+
+        <#if userinfo.role == "ROLE_SIMPLE">
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box">
@@ -211,24 +222,55 @@
                                     <th>Общее самочувствие</th>
                                 </tr>
                                 <#list bloodinfo as b>
-                                <tr>
-                                    <td>${b.date}</td>
-                                    <#if b.sugar_level < 5>
-                                        <td><span class="label label-success">${b.sugar_level}</span></td>
-                                    <#elseif b.sugar_level < 6>
-                                        <td><span class="label label-warning">${b.sugar_level}</span></td>
-                                    <#else>
-                                        <td><span class="label label-danger">${b.sugar_level}</span></td>
+                                    <tr>
+                                        <td>${b.date}</td>
+                                        <#if b.sugar_level < 5>
+                                            <td><span class="label label-success">${b.sugar_level}</span></td>
+                                        <#elseif b.sugar_level < 6>
+                                            <td><span class="label label-warning">${b.sugar_level}</span></td>
+                                        <#else>
+                                            <td><span class="label label-danger">${b.sugar_level}</span></td>
 
-                                    </#if>
-                                    <td>${b.description}</td>
-                                </tr>
+                                        </#if>
+                                        <td>${b.description}</td>
+                                    </tr>
                                 </#list>
                             </table>
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->
                 </div>
             </div>
+        <#elseif userinfo.role == "ROLE_MANAGER">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">Пациенты</h3>
+                            <div class="box-tools">
+                            </div>
+                        </div><!-- /.box-header -->
+                        <div class="box-body table-responsive no-padding">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nickname</th>
+                                    <th>Имя</th>
+                                    <th>Фамилия</th>
+                                </tr>
+                                <#list patientlist as p>
+                                    <tr>
+                                        <td><a href="/users/${p.user.id}">${p.user.id}</a></td>
+                                        <td>${p.user.nickname}</td>
+                                        <td>${p.user.firstName}</td>
+                                        <td>${p.user.surname}</td>
+                                    </tr>
+                                </#list>
+                            </table>
+                        </div><!-- /.box-body -->
+                    </div><!-- /.box -->
+                </div>
+            </div>
+        </#if>
 
         </section><!-- /.content -->
     </div><!-- /.content-wrapper -->

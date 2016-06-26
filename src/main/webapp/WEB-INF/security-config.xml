@@ -10,7 +10,7 @@
     <security:http auto-config="true" use-expressions="true">
         <security:csrf disabled="true"/>
         <security:form-login login-page="/login"
-                             default-target-url="/test"
+                             default-target-url="/table"
                              login-processing-url="/login"
                              username-parameter="nickname"
                              password-parameter="password"
